@@ -2,11 +2,8 @@
 a = 5;
 b = 2;
 c = 0;
-if (a > 1) 
+while (a > 1) 
 { 
 	c = a - b; 
-} 
-else 
-{ 
-	c = b - a; 
+	a -= 1; 
 }

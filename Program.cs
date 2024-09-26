@@ -19,12 +19,14 @@ static class Program
             {
                 content = File.ReadAllText(file);
 
-                Console.WriteLine($"Arquivo: {Path.GetFileName(file)} | Conteúdo do arquivo:");
+                Console.WriteLine("----------------------------------------------------------");
+                Console.WriteLine($"Arquivo: {Path.GetFileName(file)}\nConteúdo do arquivo:\n");
                 Console.WriteLine(content);
                 Console.WriteLine();
 
-                var parserInstance = new ParserBuilder<Tokens, string>()
-                    .BuildParser(new Parser(), ParserType.EBNF_LL_RECURSIVE_DESCENT, "instruction");
+                var parser = new Parser();
+                var parserInstance = new ParserBuilder<Tokens, object>()
+                    .BuildParser(parser, ParserType.EBNF_LL_RECURSIVE_DESCENT, "instruction");
 
                 if (parserInstance.IsOk)
                 {
@@ -51,7 +53,13 @@ static class Program
                     if (resultParser.IsOk)
                     {
                         Console.WriteLine($"Resultado da analise sintática: Sucesso!");
-                        Console.WriteLine($"Resultado: {resultParser.Result}");
+                        Console.WriteLine($"Resultado escrito:\n{resultParser.Result}\n");
+                        Console.WriteLine($"Valor final variáveis:");
+
+                        foreach (var item in parser.Variaveis)
+                        {
+                            Console.WriteLine($"{item.Token.Value}: {item.Valor}");
+                        }
                     }
                     else
                     {

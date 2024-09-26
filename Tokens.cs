@@ -34,11 +34,11 @@ public enum Tokens
     [Lexeme("(==|!=|<=|>=|<|>)")]
     RELATIONAL_OPERATOR,
 
+    [Lexeme("(=|\\+=|-=|\\*=|/=)")]
+    ASSIGNMENT_OPERATOR,
+
     [Lexeme("[+\\-*/]")]
     MATH_OPERATOR,
-
-    [Lexeme("(=|\\+=|-=|\\*=|/=|\\+\\+|--)")]
-    ASSIGNMENT_OPERATOR,
 
     [Lexeme("[(]")]
     LBRACKET,
@@ -59,5 +59,14 @@ public enum Tokens
     WHITESPACE,
 
     [Lexeme("[\\n]", isSkippable: true, isLineEnding: true)]
-    LINEENDING
+    LINEENDING,
+
+    [Lexeme("[0-9]{1,}[.][0-9]*")]
+    NUMBERVALUES,
+
+    [Lexeme("[0-9]*")]
+    INTVALUES,
+
+    [Lexeme("[\"]\\w*[\"]")]
+    CHARVALUES
 }
