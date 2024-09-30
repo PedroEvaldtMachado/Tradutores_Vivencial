@@ -6,9 +6,15 @@ using System.Globalization;
 namespace Tradutores_Vivencial1;
 public class Parser
 {
+    public Parser()
+    {
+
+    }
+
     public List<TokenTipoValor> Variaveis { get; set; } = [];
     public Stack<ResultadoCondicao> Condicoes { get; set; } = new Stack<ResultadoCondicao>();
     public List<Func<object>> Funcoes { get; set; } = [];
+
 
     [Production("declaration: type IDENTIFIER multipleDeclaration* SEMICOLON[d]")]
     public object Declaration(Token<Tokens> typeToken, Token<Tokens> firstIdentifier, List<object> tokens)
@@ -54,7 +60,7 @@ public class Parser
         return typeToken;
     }
 
-    [Production("instruction: [declaration|simglecommand|if_statement|while_statement]*")]
+    [Production("instruction: [if_statement|while_statement|declaration|simglecommand]*")]
     public object Instruction(List<object> instrucoes)
     {
         return string.Join("\n", instrucoes).Trim();

@@ -5,11 +5,11 @@ namespace Tradutores_Vivencial1;
 
 static class Program
 {
-    static void Main(string[] args)
+    static async Task Main(string[] args)
     {
         var files = Directory.GetFiles(Directory.GetCurrentDirectory());
 
-        files = files.Where(f => Path.GetFileName(f).StartsWith("teste") && Path.GetExtension(f) == ".txt").ToArray();
+        files = files.Where(f => Path.GetFileName(f).StartsWith("teste") && Path.GetExtension(f) == ".txt").OrderBy(n => n).ToArray();
 
         foreach (var file in files)
         {
@@ -17,7 +17,7 @@ static class Program
 
             if (File.Exists(file))
             {
-                content = File.ReadAllText(file);
+                content = await File.ReadAllTextAsync(file);
 
                 Console.WriteLine("----------------------------------------------------------");
                 Console.WriteLine($"Arquivo: {Path.GetFileName(file)}\nConteúdo do arquivo:\n");
@@ -30,25 +30,10 @@ static class Program
 
                 if (parserInstance.IsOk)
                 {
-                    var lexerResult = parserInstance.Result.Lexer.Tokenize(content);
+                    var resultParser = new ParseResult<Tokens, object>() { IsError = true };
+                    var awaiter = Task.Run(() => resultParser = parserInstance.Result.Parse(content));
 
-                    if (lexerResult.IsOk)
-                    {
-                        Console.WriteLine("Resultado da analise dos tokens: Sucesso!");
-                        var tokens = lexerResult.Tokens;
-
-                        foreach (var token in tokens)
-                        {
-                            Console.WriteLine($"{token.TokenID}: {token.Value}");
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine("Resultado da analise dos tokens: Falha!");
-                        Console.WriteLine($"{lexerResult.Error.ErrorMessage}");
-                    }
-
-                    var resultParser = parserInstance.Result.Parse(content);
+                    await Task.WhenAny(awaiter, Task.Delay(TimeSpan.FromSeconds(2)));
 
                     if (resultParser.IsOk)
                     {
@@ -64,10 +49,19 @@ static class Program
                     else
                     {
                         Console.WriteLine($"Resultado da analise sintática: Falha!");
-                        foreach (var error in resultParser.Errors)
+
+                        if (resultParser.Errors is not null)
                         {
-                            Console.WriteLine(error);
+                            foreach (var error in resultParser.Errors)
+                            {
+                                Console.WriteLine(error);
+                            }
                         }
+                        else
+                        {
+                            Console.WriteLine("Erro ao converter o arquivo.");
+                        }
+
                     }
 
                     Console.WriteLine();

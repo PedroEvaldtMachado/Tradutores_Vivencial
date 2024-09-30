@@ -1,0 +1,11 @@
+﻿float a, b, c;
+a = 1.2;
+
+while (a > 1) 
+{ 
+	c = a - b; 
+} 
+else 
+{ 
+	c = b - a; 
+}

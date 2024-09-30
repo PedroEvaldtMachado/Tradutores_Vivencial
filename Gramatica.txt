@@ -1,17 +1,39 @@
-﻿declaration -> type identifier_list ';'
-type -> 'char' | 'int' | 'float'
-identifier_list -> identifier (',' identifier)*
-identifier -> (letter | '_')(letter | digit | '_')*
-letter -> [a-zA-Z_]
-digit -> [0-9]
-statement -> if_statement | while_statement
-if_statement -> 'if' '(' condition ')' '{' statement_list '}' ('else' '{' statement_list '}')?
-while_statement -> 'while' '(' condition ')' '{' statement_list '}'
-condition -> expression (relational_operator expression)
-expression -> term (additive_operator term)*
-term -> factor (multiplicative_operator factor)*
-factor -> IDENTIFIER | NUMBER | '(' expression ')'
-relational_operator -> '==' | '!=' | '<' | '>' | '<=' | '>='
-additive_operator -> '+' | '-'
-multiplicative_operator -> '*' | '/'
-statement_list -> statement*
+﻿IF -> 'if'
+ELSE -> 'else'
+WHILE -> 'while'
+CHAR -> 'char'
+INT -> 'int'
+FLOAT -> 'float'
+ARRAY -> '[]'
+SEMICOLON -> ';'
+COMMA -> ','
+IDENTIFIER -> [A-z_]{1}[0-9A-z_]*
+RELATIONAL_OPERATOR -> ==|!=|<=|>=|<|>
+ASSIGNMENT_OPERATOR -> =|+=|-=|*=|/=
+MATH_OPERATOR -> [+-*/]
+LBRACKET -> '('
+RBRACKET -> ')'
+LBRACE -> '{'
+RBRACE -> '}'
+WHITESPACE -> [ \t]+
+LINEENDING -> \s\n
+NEWLINE -> \n
+CHARVALUES -> "[^"\\]*(\\.[^"\\])*"
+NUMBERVALUES -> [0-9]{1,}[.][0-9]*
+INTVALUES -> [0-9]*
+
+declaration -> type IDENTIFIER multipleDeclaration SEMICOLON
+type -> CHAR ARRAY? | INT | FLOAT
+multipleDeclaration -> (COMMA identifier)*
+instruction -> [declaration|simglecommand|if_statement|while_statement]*
+if_statement -> IF LBRACKET ifcondition RBRACKET ifblock (ELSE elseblock)?
+while_statement -> WHILE LBRACKET whilecondition RBRACKET whileblock
+ifcondition -> condition
+whilecondition -> condition
+condition -> [IDENTIFIER|INTVALUES|NUMBERVALUES|CHARVALUES] RELATIONAL_OPERATOR [IDENTIFIER|INTVALUES|NUMBERVALUES|CHARVALUES]
+simglecommand -> command
+command -> IDENTIFIER ASSIGNMENT_OPERATOR [IDENTIFIER|INTVALUES|NUMBERVALUES|CHARVALUES] (MATH_OPERATOR IDENTIFIER)* SEMICOLON
+block -> LBRACE command* RBRACE
+ifblock -> block
+elseblock -> block
+whileblock -> block

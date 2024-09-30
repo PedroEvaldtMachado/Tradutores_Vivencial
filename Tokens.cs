@@ -13,6 +13,7 @@ public enum Tokens
     [Lexeme("(while)")]
     WHILE,
 
+
     [Lexeme("(char)")]
     CHAR,
 
@@ -25,11 +26,10 @@ public enum Tokens
     [Lexeme("(float)")]
     FLOAT,
 
-    [Lexeme(";")]
-    SEMICOLON,
 
-    [Lexeme(",")]
-    COMMA,
+    [Lexeme("[A-z_]{1}[0-9A-z_]*")]
+    IDENTIFIER,
+
 
     [Lexeme("(==|!=|<=|>=|<|>)")]
     RELATIONAL_OPERATOR,
@@ -37,8 +37,9 @@ public enum Tokens
     [Lexeme("(=|\\+=|-=|\\*=|/=)")]
     ASSIGNMENT_OPERATOR,
 
-    [Lexeme("[+\\-*/]")]
+    [Lexeme("[+\\-\\*/]")]
     MATH_OPERATOR,
+
 
     [Lexeme("[(]")]
     LBRACKET,
@@ -52,21 +53,30 @@ public enum Tokens
     [Lexeme("[}]")]
     RBRACE,
 
-    [Lexeme("[A-z_]{1}[0-9A-z_]*")]
-    IDENTIFIER,
 
-    [Lexeme("[ \\r\\t]+", isSkippable: true)]
+    [Lexeme(";", isLineEnding: true)]
+    SEMICOLON,
+
+    [Lexeme(",")]
+    COMMA,
+
+
+    [Lexeme("[ \\t]+", isSkippable: true)]
     WHITESPACE,
 
-    [Lexeme("[\\n]", isSkippable: true, isLineEnding: true)]
+    [Lexeme("(\\s\\n)", isSkippable: true, isLineEnding: true)]
     LINEENDING,
+
+    [Lexeme("(\\n)", isLineEnding: true)]
+    NEWLINE,
+
+
+    [Lexeme("\"[^\"\\\\]*(\\\\.[^\"\\\\])*\"")]
+    CHARVALUES,
 
     [Lexeme("[0-9]{1,}[.][0-9]*")]
     NUMBERVALUES,
 
     [Lexeme("[0-9]*")]
-    INTVALUES,
-
-    [Lexeme("[\"]\\w*[\"]")]
-    CHARVALUES
+    INTVALUES
 }
